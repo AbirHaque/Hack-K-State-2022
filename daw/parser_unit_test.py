@@ -23,5 +23,4 @@ for test in list(tests.keys()):
         print("Incorrect computation:",post_fix)
     else:
         print("Success")
-    print(post_fix)
     print(parser.calculate(output_queue))
