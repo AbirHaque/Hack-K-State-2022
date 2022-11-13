@@ -12,6 +12,9 @@ from matplotlib.backends.backend_gtk3agg import  FigureCanvasGTK3Agg as FigureCa
 from matplotlib.figure import Figure
 import numpy as np
 
+import random
+import string
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
@@ -83,6 +86,7 @@ class GridWindow(Gtk.Window):
         load = Gtk.Button(label="Load")
         save = Gtk.Button(label="Save")
         export = Gtk.Button(label="Export")
+        self.project_entry=Gtk.Entry()
 
         add_column_button.connect("clicked", self.on_click_add_column_button)
         remove_column_button.connect("clicked", self.on_click_remove_column_button)
@@ -96,7 +100,7 @@ class GridWindow(Gtk.Window):
         '''
         export.connect("clicked", self.on_click_export)
         
-        toolbar_elements=[self.instrument_combo,add_instrument_button,remove_instrument_button,play,stop,load,save,export,add_column_button,remove_column_button]
+        toolbar_elements=[self.instrument_combo,add_instrument_button,remove_instrument_button,play,stop,load,save,export,add_column_button,remove_column_button,self.project_entry]
         self.toolbar_grid.add(toolbar_elements[0])
         for i in range(1,len(toolbar_elements)):
             self.toolbar_grid.attach_next_to(toolbar_elements[i],toolbar_elements[i-1],Gtk.PositionType.RIGHT, 1, 1)
@@ -219,13 +223,15 @@ class GridWindow(Gtk.Window):
         play_obj.wait_done()
         print("Done.")
         
+    def responseToDialog(self,entry, dialog, response):
+        dialog.response(response)
     def on_click_export(self, button):
         final_audio=self.gen_wav_binary()
-        write("tmp.wav", self.sample_rate, np.array(final_audio).astype(np.int16))
+        write(self.project_entry.get_text()+".wav", self.sample_rate, np.array(final_audio).astype(np.int16))
         client = Client()
         client.set_endpoint('http://10.150.152.83/80/v1').set_project('636f70dd0ab3fd35c183')
         storage = Storage(client)
-        result = storage.create_file('636f70ff960601600409', 'sdfiosjdf', InputFile.from_path('tmp.wav'))
+        result = storage.create_file('636f70ff960601600409', (''.join(random.choices(string.ascii_lowercase, k=5))), InputFile.from_path(self.project_entry.get_text()+".wav"))
         print("Done")
         
     def on_click_add_column_button(self, button):
@@ -261,7 +267,7 @@ class GridWindow(Gtk.Window):
             elif queue[i]=="t":
                 t_indices.append(i)
         data=[]
-        for t in range(0,44100,441):
+        for t in range(0,44100,100):
             for k in t_indices:
                 queue[k]=str(float(t))
             data.append(parser.calculate(queue))
@@ -269,7 +275,7 @@ class GridWindow(Gtk.Window):
 
         self.fig = Figure(figsize=(5, 4), dpi=100)
         self.ax = self.fig.add_subplot()
-        self.ax.plot(np.arange(0.0,44100,441),data)
+        self.ax.plot(np.arange(0.0,44100,100),data)
 
         self.canvas = FigureCanvas(self.fig)  # a Gtk.DrawingArea
         self.canvas.set_size_request(600, 400)
