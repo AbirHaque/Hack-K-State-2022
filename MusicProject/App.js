@@ -66,7 +66,7 @@ const App = () => {
       }
       if (event.type === Event.PlaybackState) {
         console.log(event.state)
-        if(event.state === 'paused' || event.state==='playing') setPlayerState(event.state)
+        setPlayerState(event.state)
       }
       if (event.type === Event.PlaybackQueueEnded && event.nextTrack !== undefined) {
         TrackPlayer.stop();
@@ -134,14 +134,14 @@ const App = () => {
       TrackPlayer.add(songList);
       console.log(duration)
       TrackPlayer.play();
-      // let refreshPlay = setInterval( () => {
-      //   if (playerState !== State.Stopped &&  playerState !== State.Playing) {
-      //     TrackPlayer.play();
-      //     setPlayerState(State.Playing);
-      //   } else {
-      //     clearInterval(refreshPlay);
-      //   }
-      // }, 1000);
+      let refreshPlay = setInterval( () => {
+        if (playerState !== State.Stopped &&  playerState !== State.Playing) {
+          TrackPlayer.play();
+          setPlayerState(State.Playing);
+        } else {
+          clearInterval(refreshPlay);
+        }
+      }, 1000);
     }
   }, [songList])
 
