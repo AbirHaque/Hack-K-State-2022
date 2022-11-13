@@ -66,7 +66,7 @@ const App = () => {
       }
       if (event.type === Event.PlaybackState) {
         console.log(event.state)
-        setPlayerState(event.state)
+        if(event.state === 'paused' || event.state==='playing') setPlayerState(event.state)
       }
       if (event.type === Event.PlaybackQueueEnded && event.nextTrack !== undefined) {
         TrackPlayer.stop();
@@ -133,15 +133,15 @@ const App = () => {
     if (songList.length > 0) {
       TrackPlayer.add(songList);
       console.log(duration)
-      //TrackPlayer.pause();
-      let refreshPlay = setInterval( () => {
-        if (playerState !== State.Stopped &&  playerState !== State.Playing) {
-          TrackPlayer.play();
-          setPlayerState(State.Playing);
-        } else {
-          clearInterval(refreshPlay);
-        }
-      }, 1000);
+      TrackPlayer.play();
+      // let refreshPlay = setInterval( () => {
+      //   if (playerState !== State.Stopped &&  playerState !== State.Playing) {
+      //     TrackPlayer.play();
+      //     setPlayerState(State.Playing);
+      //   } else {
+      //     clearInterval(refreshPlay);
+      //   }
+      // }, 1000);
     }
   }, [songList])
 
@@ -166,7 +166,6 @@ const App = () => {
   const Item = ({ song, isLiked, index}) => (
     <View style={[styles.item, index == queueIndex && styles.activeItem]}>
       <TouchableOpacity onPress={() => {
-        console.log('hioih');
         TrackPlayer.skip(index)}}>
         <Text style={{color: 'white'}}>{song.title}</Text>
       </TouchableOpacity>
@@ -227,7 +226,7 @@ const likeHandler = async (songid, isLiked) => {
               TrackPlayer.pause();
               TrackPlayer.seekTo(value)
               setIsSeeking(true);
-              TrackPlayer.play();
+              //TrackPlayer.play();
             }}
             style={{flexGrow: 5}}
             minimumValue={0}
