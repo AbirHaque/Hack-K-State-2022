@@ -23,11 +23,13 @@ class Parser:
         return token in self.valid_variables
 
     def tokenize(self, string):
-        string = string.replace(" ","").replace("("," ( ").replace(")"," ) ").replace("pi","3.141592653589793").replace(","," , ")
+        string = string.replace(" ","").replace("("," ( ").replace(")"," ) ").replace("pi"," 3.141592653589793 ").replace(","," , ")
         for function in self.functions:
             string=string.replace(function," "+function+" ")
         for operator in self.operators:
             string=string.replace(operator," "+operator+" ")
+        for variable in self.valid_variables:
+            string=string.replace(variable," "+variable+" ")
         tokens = string.split(" ")
         for i in range(len(tokens)-1,-1,-1):
             if tokens[i]=="":

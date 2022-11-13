@@ -9,7 +9,8 @@ https://en.wikipedia.org/wiki/Shunting_yard_algorithm
 tests = {
     '3 + 4':'3 4 + ',
     '3+4*2/(1-5)^2^3':'3 4 2 * 1 5 - 2 3 ^ ^ / + ',
-    'sin(max(2,3)/3*pi)':'2 3 max 3 / 3.141592653589793 * sin '
+    'sin(max(2,3)/3*pi)':'2 3 max 3 / 3.141592653589793 * sin ',
+    '5':'5'
 }
 for test in list(tests.keys()):
     output_queue = parser.shunting_yard(test)
@@ -19,8 +20,8 @@ for test in list(tests.keys()):
     if tests[test]!=post_fix:
         print("Error")
         print("Test:",test)
-        print("Answer:",tests[test])
-        print("Incorrect computation:",post_fix)
+        print("Answer:",tests[test]+"|")
+        print("Incorrect computation:",post_fix+"|")
     else:
         print("Success")
     print(parser.calculate(output_queue))
