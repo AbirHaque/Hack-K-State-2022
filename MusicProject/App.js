@@ -68,9 +68,7 @@ const App = () => {
         console.log(event.state)
         setPlayerState(event.state)
       }
-      if (event.type === Event.PlaybackQueueEnded && event.nextTrack !== undefined) {
-        TrackPlayer.stop();
-      }
+      
     });
   
     const isPlaying = playerState === State.Playing;
@@ -226,7 +224,7 @@ const likeHandler = async (songid, isLiked) => {
               TrackPlayer.pause();
               TrackPlayer.seekTo(value)
               setIsSeeking(true);
-              //TrackPlayer.play();
+              TrackPlayer.play();
             }}
             style={{flexGrow: 5}}
             minimumValue={0}
