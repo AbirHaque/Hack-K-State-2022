@@ -201,7 +201,7 @@ const likeHandler = async (songid, isLiked) => {
       flex: 1}}>
 
         <Text style={{fontWeight: 'bold', fontSize: 30, marginLeft: 15}}>
-          Mathic
+          MuseEQ
         </Text>
       
         {renderSongs}
